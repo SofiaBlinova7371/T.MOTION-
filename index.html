@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://unpkg.com/chroma-js@2.1.0/chroma.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+  <title>T.MOTION()</title>
+</head>
+<body>
+  <div class="input-section">
+            <!-- TEXT AREA -->
+        <h1>T.MOTION()</h1>
+        <textarea id="text-input" placeholder="Text input..." rows="3"></textarea>
+
+        <!-- CANVAS FORMAT -->
+        <div class="filter" data-type="canvas-format">
+        <label>Canvas Format</label>
+        <ul class="filter-options hidden">
+            <li data-value="portrait">Portrait</li>
+            <li data-value="square">Square</li>
+            <li data-value="landscape">Landscape</li>
+        </ul>
+        <input type="hidden" id="canvas-format" value="square">
+        </div>
+
+        <!-- MOOD -->
+        <div class="filter" data-type="mood">
+        <label>Mood</label>
+        <ul class="filter-options hidden">
+            <li data-value="monochrome">Monochrome</li>
+            <li data-value="vibrant">Vibrant</li>
+            <li data-value="soft">Soft</li>
+            <li data-value="warm">Warm</li>
+            <li data-value="cold">Cold</li>
+        </ul>
+        <input type="hidden" id="mood" value="monochrome">
+        </div>
+
+        <!-- STRUCTURE (range stays as-is) -->
+        <div class="filter-slider">
+            <label for="structure">Structure</label>
+            <div class="slider-wrapper">
+              <input type="range" id="structure" min="0" max="100" step="1" value="50">
+            </div>
+          </div>
+
+        <!-- TYPOGRAPHY STYLE -->
+        <div class="filter" data-type="typography">
+        <label>Typography Style</label>
+        <ul class="filter-options hidden">
+            <li data-value="contemporary">Contemporary</li>
+            <li data-value="brutalist">Brutalist</li>
+            <li data-value="bookish">Bookish</li>
+            <li data-value="console">Console</li>
+            <li data-value="groovy">Groovy</li>
+            <li data-value="loose-script">Loose Script</li>
+        </ul>
+        <input type="hidden" id="typography" value="contemporary">
+        </div>
+
+        <!-- MOTION TYPE -->
+        <div class="filter" data-type="motion">
+        <label>Motion Type</label>
+        <ul class="filter-options hidden">
+            <li data-value="static">Static</li>
+            <li data-value="dynamic">Dynamic</li>
+        </ul>
+        <input type="hidden" id="motion" value="static">
+        </div>
+
+        <!-- GENERATE BUTTON -->
+        <div class="generate-button" id="generate-btn">
+            <span>Generate</span>
+            <img class="arrow" src="Symbols/Arrow.svg" alt="Arrow">
+          </div>
+  </div>
+
+  <div class="output-section">
+    <div class="canvas square"></div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+  <script type="module" src="motion.js"></script>
+</body>
+</html>

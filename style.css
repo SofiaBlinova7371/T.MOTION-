@@ -1,0 +1,237 @@
+/* GLOBAL RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* HTML ROOT */
+html {
+  font-size: 62.5%;
+}
+
+/* BODY LAYOUT */
+body {
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* FONT IMPORT */
+@font-face {
+  font-family: "body_text";
+  src: url("Fonts/PPNeueMontreal-Book.otf");
+}
+
+/* TYPOGRAPHY */
+h1 {
+  font-family: body_text;
+  text-transform: uppercase;
+  font-size: 3rem;
+  padding-left: 2.5rem;
+  margin-bottom: 4rem;
+}
+
+/* INPUT PANEL */
+.input-section {
+  width: 30%;
+  padding-top: 2.5rem;
+  border-right: 0.15rem solid black;
+  overflow-y: scroll;
+}
+
+#text-input {
+  width: 85%;
+  height: 10rem;
+  margin-left: 2.5rem;
+  padding-left: 1rem;
+  font-family: body_text;
+  font-size: 1.6rem;
+  resize: vertical;
+  color: #ccc;
+  margin-bottom: 3rem;
+  padding: 1rem;
+}
+
+/* FILTER CONTAINERS */
+.filter,
+.filter-slider {
+  width: 100%;
+  border-bottom: 0.15rem solid black;
+  padding: 1.5rem 0 0;
+  margin-bottom: 1.5rem;
+}
+
+/* FILTER LABELS */
+.filter label,
+.filter-slider label {
+  font-family: body_text;
+  font-size: 2rem;
+  padding: 0 2.5rem 2rem;
+  cursor: pointer;
+  display: block;
+  text-transform: uppercase;
+  width: 100%;
+}
+
+/* DROPDOWN OPTIONS */
+.filter-options {
+  list-style: none;
+  width: 100%;
+  margin: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: 0.4s ease, padding 0.5s ease;
+}
+
+.filter-options.open {
+  max-height: 50rem;
+  padding: 1rem 0 1.5rem 0;
+}
+
+.filter-options li {
+  font-family: body_text;
+  font-size: 1.6rem;
+  width: 100%;
+  padding: 1.7rem 2.5rem;
+  border-top: 0.1rem solid #ccc;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.filter-options li:last-child {
+  margin-bottom: 1rem;
+}
+
+.filter-options li:hover,
+.filter-options li.selected {
+  background: #e0e0e0;
+}
+
+/* SLIDER DROPDOWN */
+.slider-wrapper {
+  max-height: 0;
+  overflow: hidden;
+  transition: 0.4s ease, padding 0.5s ease;
+  padding: 0 3rem;
+}
+
+.slider-wrapper.open {
+  max-height: 8rem;
+  padding-bottom: 1.5rem;
+}
+
+#structure {
+  -webkit-appearance: none;
+  width: 95%;
+  margin: 1.5rem 0;
+  height: 0.3rem;
+  background: black;
+  border-radius: 0.2rem;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Thumb styling */
+#structure::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: black;
+  cursor: pointer;
+  border: none;
+}
+
+#structure::-moz-range-thumb {
+  height: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: black;
+  cursor: pointer;
+  border: none;
+}
+
+/* BUTTON */
+.generate-button {
+  width: 100%;
+  /* margin-left: 2.5rem; */
+  margin-top: -1.5rem;
+  padding: 2.5rem 2.5rem; /* vertical padding + space for arrow on right */
+  background: black;
+  color: white;
+  font-family: body_text;
+  font-size: 2rem;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.generate-button .arrow {
+  width: 2rem;
+  height: 2rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.generate-button:hover .arrow {
+  opacity: 1;
+}
+
+/* OUTPUT PANEL */
+.output-section {
+  width: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.canvas {
+  position: relative;
+  overflow: hidden;
+  border: 0.1rem solid black;
+}
+
+.canvas.square {
+  width: 80%;
+  max-width: 60%;
+  aspect-ratio: 1 / 1;
+}
+
+.canvas.landscape {
+  width: 90%;
+  aspect-ratio: 3 / 2;
+}
+
+.canvas.portrait {
+  height: 90%;
+  aspect-ratio: 2 / 3;
+}
+
+/* TEXT OUTPUT */
+.text-copy {
+  display: inline-block;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.char {
+  display: inline-block;
+}
+
+/* UTILITY */
+.hidden {
+  opacity: 0;
+}
+
+.open {
+  opacity: 1;
+}
