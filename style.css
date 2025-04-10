@@ -22,7 +22,7 @@ body {
 /* FONT IMPORT */
 @font-face {
   font-family: "body_text";
-  src: url("./fonts/PPNeueMontreal-Book.otf");
+  src: url("/PPNeueMontreal-Book.otf");
 }
 
 /* TYPOGRAPHY */
