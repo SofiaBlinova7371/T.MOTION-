@@ -22,7 +22,7 @@ body {
 /* FONT IMPORT */
 @font-face {
   font-family: "body_text";
-  src: url("/PPNeueMontreal-Book.otf");
+  src: url("Fonts/PPNeueMontreal-Book.otf");
 }
 
 /* TYPOGRAPHY */
@@ -234,4 +234,74 @@ h1 {
 
 .open {
   opacity: 1;
+}
+
+
+
+/* MOBILE ADAPTATION */
+@media screen and (max-width: 800px) {
+  body {
+    flex-direction: column;
+    overflow: scroll;
+  }
+
+  .input-section {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 0.15rem solid black;
+    padding-bottom: 0;
+    overflow-y: visible;
+  }
+
+  .output-section {
+    width: 100%;
+    height: auto;
+    padding: 5rem 0;
+    border-top: none;
+  }
+
+  .canvas.square,
+  .canvas.landscape,
+  .canvas.portrait {
+    width: 90%;
+    max-width: 90%;
+  }
+
+  h1,
+  .filter label,
+  .filter-options li,
+  .slider-wrapper {
+    padding-left: 3rem !important;
+    padding-right: 3rem;
+  }
+
+  #text-input {
+    width: calc(100% - 6rem);
+    margin-left: 3rem;
+    padding-left: 1rem;
+  }
+
+  .generate-button {
+    width: 100%;
+    margin: 0;
+    margin-top: -2rem;
+    padding: 2.5rem 3rem;
+    border-radius: 0;
+  }
+
+  .generate-button span {
+    padding-left: 0;
+  }
+
+  .generate-button .arrow {
+    margin-right: 0;
+  }
+
+  #download-btn {
+    width: 100%;
+    margin: 0;
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
 }
