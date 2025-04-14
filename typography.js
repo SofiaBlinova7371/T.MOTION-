@@ -13,6 +13,7 @@ const fontsByStyle = {
 };
 
 let fontsReady = false;
+export let currentFont = 'sans-serif';
 
 fetch(API_URL)
   .then(response => response.json())
@@ -56,35 +57,23 @@ fetch(API_URL)
     console.error('Error fetching Google Fonts:', error);
   });
 
-  export function updateTypographyStyle() {
-    if (!fontsReady) return;
-  
-    const selectedStyle = typographySelector.value;
-    const fontList = fontsByStyle[selectedStyle];
-  
-    if (!fontList || fontList.length === 0) return;
-  
-    const randomFont = fontList[Math.floor(Math.random() * fontList.length)];
-    const fontNameForCSS = randomFont.replace(/ /g, '+');
-  
-    // Remove previous dynamic font links
-    const existingLinks = document.querySelectorAll('link[data-dynamic-font]');
-    existingLinks.forEach(link => link.remove());
-  
-    // Load new font from Google Fonts
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = `https://fonts.googleapis.com/css2?family=${fontNameForCSS}&display=swap`;
-    link.setAttribute('data-dynamic-font', 'true');
-    document.head.appendChild(link);
-  
-    // Apply font to all text copies after short delay
-    setTimeout(() => {
-      const copies = document.querySelectorAll('.text-copy');
-      copies.forEach(el => {
-        el.style.fontFamily = `'${randomFont}', sans-serif`;
-      });
-  
-      console.log(`✅ Applied font: ${randomFont} to ${copies.length} elements`);
-    }, 0);
-  }
+export function updateTypographyStyle() {
+  if (!fontsReady) return;
+
+  const selectedStyle = typographySelector.value;
+  const fontList = fontsByStyle[selectedStyle];
+  if (!fontList || fontList.length === 0) return;
+
+  const randomFont = fontList[Math.floor(Math.random() * fontList.length)];
+  currentFont = randomFont;
+  const fontNameForCSS = randomFont.replace(/ /g, '+');
+
+  const existingLinks = document.querySelectorAll('link[data-dynamic-font]');
+  existingLinks.forEach(link => link.remove());
+
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = `https://fonts.googleapis.com/css2?family=${fontNameForCSS}&display=swap`;
+  link.setAttribute('data-dynamic-font', 'true');
+  document.head.appendChild(link);
+}

@@ -9,15 +9,14 @@ const structureValue = document.getElementById('structure-value');
 
 // --- GENERATE TEXT ---
 function generateArtwork() {
-  updateCanvasFormat();
-  updateTypographyStyle();
-
   const text = textInput.value.trim() || "Your text";
   const motionType = document.getElementById('motion').value;
 
-  generateTextPreview(text, motionType);
+  updateCanvasFormat().then(() => {
+    updateTypographyStyle();
+    generateTextPreview(text, motionType);
+  });
 }
-
 generateBtn.addEventListener('click', generateArtwork);
 
 // --- HANDLE FILTER DROPDOWNS ---
@@ -71,3 +70,54 @@ structureSlider.addEventListener('change', () => {
   structureSlider.value = snapped;
   structureValue.textContent = snapped;
 });
+
+const downloadBtn = document.getElementById('download-btn');
+
+downloadBtn.addEventListener('click', () => {
+  const motionType = document.getElementById('motion').value;
+  const canvas = document.querySelector('.canvas');
+
+  if (motionType === 'static') {
+    html2canvas(canvas).then(canvasEl => {
+      const link = document.createElement('a');
+      link.download = 'static_artwork.png';
+      link.href = canvasEl.toDataURL('image/png');
+      link.click();
+    });
+  } else {
+
+recordCanvas(8000);
+  }
+});
+
+// Helper function to record canvas as video
+function recordCanvas(duration = 8000) {
+  const fps = 60;
+  const chunks = [];
+
+  const canvasEl = document.getElementById('artwork-canvas');
+  if (!canvasEl || !canvasEl.captureStream) {
+    console.error('Canvas element or captureStream not available.');
+    return;
+  }
+
+  const stream = canvasEl.captureStream(fps);
+  const recorder = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp9' });
+
+  recorder.ondataavailable = e => chunks.push(e.data);
+  recorder.onstop = () => {
+    const blob = new Blob(chunks, { type: 'video/webm' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'dynamic_artwork.webm';
+    link.click();
+  };
+
+  recorder.start();
+
+  // Stop after given duration
+  setTimeout(() => {
+    recorder.stop();
+  }, duration);
+}

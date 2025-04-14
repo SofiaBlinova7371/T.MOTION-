@@ -198,6 +198,7 @@ h1 {
   position: relative;
   overflow: hidden;
   border: 0.1rem solid black;
+  will-change: transform;
 }
 
 .canvas.square {

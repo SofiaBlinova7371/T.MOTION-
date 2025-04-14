@@ -1,8 +1,18 @@
 const canvasFormatSelector = document.getElementById('canvas-format');
-const canvas = document.querySelector('.canvas');
+const canvasEl = document.getElementById('artwork-canvas');
 
 export function updateCanvasFormat() {
-  canvas.classList.remove('square', 'landscape', 'portrait');
-  const selected = canvasFormatSelector.value;
-  canvas.classList.add(selected);
+  return new Promise(resolve => {
+    const wrapper = canvasEl.parentElement; // ✅ .canvas wrapper
+    wrapper.classList.remove('square', 'landscape', 'portrait');
+    wrapper.classList.add(canvasFormatSelector.value);
+
+    requestAnimationFrame(() => {
+      const rect = wrapper.getBoundingClientRect();
+      canvasEl.width = Math.floor(rect.width);
+      canvasEl.height = Math.floor(rect.height);
+      console.log('Canvas resized to:', canvasEl.width, canvasEl.height);
+      resolve();
+    });
+  });
 }
