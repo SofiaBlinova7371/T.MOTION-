@@ -1,3 +1,4 @@
+
 import { generateMoodPalette } from './mood.js';
 import { currentFont } from './typography.js';
 
@@ -10,15 +11,14 @@ let animationFrameId = null;
 let drawData = [];
 let currentPalette = null;
 
-// Convert rem units to pixels (1rem = 10px if root font-size is 62.5%)
 function remToPx(rem) {
-  const baseFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize); // usually 10px
+  const baseFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
   return rem * baseFontSize;
 }
 
 function getResponsiveFontSize(minRem, maxRem) {
-  const screenFactor = Math.min(window.innerWidth, 900) / 900; // Normalize to 900px width
-  const clampedFactor = Math.max(0.5, screenFactor); // Prevent too small sizes
+  const screenFactor = Math.min(window.innerWidth, 900) / 900;
+  const clampedFactor = Math.max(0.5, screenFactor);
   const rem = minRem + (maxRem - minRem) * Math.random();
   return remToPx(rem * clampedFactor);
 }
@@ -54,28 +54,17 @@ export function generateTextPreview(text, motionType) {
 
   const allGroups = [];
   paragraphs.forEach(({ text: paragraph, weight }, pIndex) => {
-    const baseMin = 1.2; // rem
-    const baseMax = 2.4; // rem
+    const baseMin = 1.2;
+    const baseMax = 2.4;
     const layoutMultiplier = layoutType === 'chaotic' ? 1.4 : layoutType === 'modular' ? 1.2 : 1;
-
-    const totalTargetGroups = Math.floor(
-      (Math.random() * (baseMax - baseMin) + baseMin) * layoutMultiplier * 5
-    );
-
+    const totalTargetGroups = Math.floor((Math.random() * (baseMax - baseMin) + baseMin) * layoutMultiplier * 5);
     const weightAdjusted = weight * totalTargetGroups;
     const numGroups = Math.max(1, Math.floor(weightAdjusted + Math.random()));
 
     for (let g = 0; g < numGroups; g++) {
-
-      let fontSize;
-
-      if (layoutType === 'structured') {
-        fontSize = getResponsiveFontSize(1.4, 3.2);
-      } else if (layoutType === 'modular') {
-        fontSize = getResponsiveFontSize(1.2, 4);
-      } else {
-        fontSize = getResponsiveFontSize(1, 5);
-      }
+      let fontSize = layoutType === 'structured' ? getResponsiveFontSize(1.4, 3.2)
+                   : layoutType === 'modular' ? getResponsiveFontSize(1.2, 4)
+                   : getResponsiveFontSize(1, 5);
 
       allGroups.push({
         text: paragraph,
@@ -88,12 +77,14 @@ export function generateTextPreview(text, motionType) {
 
   const groupPositions = [];
 
+  let sharedMotion = null;
+
   allGroups.forEach((group, i) => {
     const fontSize = group.size;
     const text = applyTextTransform(group.text, group.transform);
     ctx.font = `${fontSize}px '${currentFont}', sans-serif`;
 
-    const maxTextWidth = canvas.width * 0.45; // more responsive for portrait/landscape
+    const maxTextWidth = canvas.width * 0.45;
     const lines = wrapLine(text, fontSize, maxTextWidth);
 
     let baseX, baseY;
@@ -116,87 +107,110 @@ export function generateTextPreview(text, motionType) {
     const duplicates = Math.floor(Math.max(4, Math.min(15, 200 / textLength)) + Math.random() * 3);
 
     const direction =
-      layoutType === 'chaotic'
-        ? 'cloud'
-        : layoutType === 'structured'
-        ? ['horizontal', 'vertical'][i % 2]
-        : ['horizontal', 'vertical', 'diagonal', 'diagonal-zigzag'][Math.floor(Math.random() * 4)];
+      layoutType === 'chaotic' ? 'cloud'
+      : layoutType === 'structured' ? ['horizontal', 'vertical'][i % 2]
+      : ['horizontal', 'vertical', 'diagonal', 'diagonal-zigzag'][Math.floor(Math.random() * 4)];
 
     const diagonalRight = Math.random() > 0.5;
     const baseAngle = diagonalRight ? Math.PI / 4 : -Math.PI / 4;
 
-    const groupMotion = {
-      dx: 0,
-      dy: 0,
-      rotation: 0,
-      rotationSpeed: 0,
-      bounce: Math.random() > 0.3,
-      dynamicScale: false,
-      scaleSpeed: 0,
-      scaleAmplitude: 0,
-      scalePhase: 0
+    let groupMotion = {
+      dx: 0, dy: 0, rotation: 0, rotationSpeed: 0, bounce: false,
+      dynamicScale: false, scaleSpeed: 0, scaleAmplitude: 0, scalePhase: 0
     };
 
-    if (motionType === 'dynamic') {
-      groupMotion.dx = (Math.random() - 0.5) * 1.2;
-      groupMotion.dy = (Math.random() - 0.5) * 1.2;
-
-      if (Math.random() > 0.4) {
-        groupMotion.rotationSpeed = (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 0.01 + 0.002);
+    function getRandomMotion() {
+      const type = ['flicker', 'rotation', 'scale', 'blur'][Math.floor(Math.random() * 4)];
+      const motion = {};
+    
+      if (type === 'rotation') {
+        motion.rotationSpeed = (Math.random() - 0.5) * 0.05;
       }
-
+    
+      if (type === 'scale') {
+        motion.dynamicScale = true;
+        motion.scaleSpeed = 2 + Math.random() * 3;
+        motion.scaleAmplitude = 0.2 + Math.random() * 0.3;
+        motion.scalePhase = Math.random() * Math.PI * 2;
+      }
+    
+      if (type === 'flicker') {
+        motion.flicker = true;
+      }
+    
+      if (type === 'blur') {
+        motion.blur = Math.random() * 2;
+      }
+    
+      // Set motion direction
+      motion.dx = (Math.random() - 0.5) * 1.5;
+      motion.dy = (Math.random() - 0.5) * 1.5;
+    
+      // OPTIONAL: add bounce behavior randomly (for modular or chaotic)
       if (Math.random() > 0.5) {
-        groupMotion.dynamicScale = true;
-        groupMotion.scaleSpeed = 2 + Math.random() * 3;
-        groupMotion.scaleAmplitude = 0.15 + Math.random() * 0.25;
-        groupMotion.scalePhase = Math.random() * Math.PI * 2;
+        motion.bounce = true;
       }
+    
+      return motion;
     }
 
+
+    if (motionType === 'dynamic') {
+      if (layoutType === 'structured') {
+        if (!sharedMotion) {
+          sharedMotion = getRandomMotion();
+          sharedMotion.bounce = true; // ✅ Always bounce for structured
+        }
+        groupMotion = { ...groupMotion, ...sharedMotion };
+      } else if (layoutType === 'modular') {
+        groupMotion = { ...groupMotion, ...getRandomMotion() };
+      }
+    }
     for (let d = 0; d < duplicates; d++) {
       lines.forEach((line, j) => {
-        let x = baseX;
-        let y = baseY;
+        let x = baseX, y = baseY;
 
         if (layoutType === 'chaotic') {
+          const chaosMotion = getRandomMotion();
           const angle = Math.random() * 2 * Math.PI;
           const radius = Math.random() * 100 + 30;
           x += Math.cos(angle) * radius;
           y += Math.sin(angle) * radius;
-        } else if (direction === 'horizontal') {
-          x += d * (ctx.measureText(line).width + 6);
-          y += j * fontSize * 1.2;
-        } else if (direction === 'vertical') {
-          x += j * (ctx.measureText(line).width + 6);
-          y += d * fontSize * 1.2;
-        } else {
-          const flip = (d % 4 < 2) ? 1 : -1;
-          const angle = direction === 'diagonal-zigzag' ? flip * baseAngle : baseAngle;
-          const radius = (j + d) * (fontSize * 0.9);
-          x += Math.cos(angle) * radius;
-          y += Math.sin(angle) * radius;
-        }
 
-        drawData.push({
-          text: line,
-          fontSize,
-          color: group.color,
-          x, y,
-          dx: groupMotion.dx,
-          dy: groupMotion.dy,
-          rotation: groupMotion.rotation,
-          rotationSpeed: groupMotion.rotationSpeed,
-          flicker: layoutType !== 'structured' && Math.random() > 0.7,
-          blur: layoutType === 'chaotic' ? Math.random() * 2 : 0,
-          dynamicScale: groupMotion.dynamicScale,
-          scaleSpeed: groupMotion.scaleSpeed,
-          scaleAmplitude: groupMotion.scaleAmplitude,
-          scalePhase: groupMotion.scalePhase,
-          bounce: layoutType === 'structured' ? groupMotion.bounce : Math.random() > 0.6,
-          individualRotation: layoutType === 'chaotic',
-          groupId: i,
-          layoutType
-        });
+          drawData.push({
+            text: line,
+            fontSize,
+            color: group.color,
+            x, y,
+            groupId: i,
+            layoutType,
+            ...chaosMotion
+          });
+        } else {
+          if (direction === 'horizontal') {
+            x += d * (ctx.measureText(line).width + 6);
+            y += j * fontSize * 1.2;
+          } else if (direction === 'vertical') {
+            x += j * (ctx.measureText(line).width + 6);
+            y += d * fontSize * 1.2;
+          } else {
+            const flip = (d % 4 < 2) ? 1 : -1;
+            const angle = direction === 'diagonal-zigzag' ? flip * baseAngle : baseAngle;
+            const radius = (j + d) * (fontSize * 0.9);
+            x += Math.cos(angle) * radius;
+            y += Math.sin(angle) * radius;
+          }
+
+          drawData.push({
+            text: line,
+            fontSize,
+            color: group.color,
+            x, y,
+            groupId: i,
+            layoutType,
+            ...groupMotion
+          });
+        }
       });
     }
   });
@@ -226,15 +240,24 @@ function drawFrame(animated = true) {
 
     group.forEach(item => {
       if (animated) {
+        const textWidth = ctx.measureText(item.text).width;
+        const textHeight = item.fontSize;
+      
         if (item.bounce) {
-          if (item.x < 0 || item.x > canvas.width - 60) item.dx *= -1;
-          if (item.y < 0 || item.y > canvas.height - 30) item.dy *= -1;
+          if (item.x < 0 || item.x + textWidth > canvas.width) {
+            item.dx *= -1;
+            item.x = Math.max(0, Math.min(item.x, canvas.width - textWidth));
+          }
+          if (item.y < 0 || item.y + textHeight > canvas.height) {
+            item.dy *= -1;
+            item.y = Math.max(0, Math.min(item.y, canvas.height - textHeight));
+          }
         }
+      
         item.x += item.dx;
         item.y += item.dy;
         item.rotation += item.rotationSpeed || 0;
       }
-
       drawItem(item, animated, sharedRotation, groupCenterX, groupCenterY);
     });
   });
@@ -243,15 +266,15 @@ function drawFrame(animated = true) {
 function drawItem(data, animated = true, sharedRotation = 0, centerX = 0, centerY = 0) {
   ctx.save();
 
-  const rotation = data.individualRotation ? data.rotation : sharedRotation;
+  const rotation = data.layoutType === 'chaotic' ? data.rotation : sharedRotation;
 
-  if (sharedRotation && !data.individualRotation) {
+  if (data.layoutType !== 'chaotic') {
     ctx.translate(centerX, centerY);
     ctx.rotate(rotation || 0);
     ctx.translate(data.x - centerX, data.y - centerY);
   } else {
     ctx.translate(data.x, data.y);
-    if (animated) ctx.rotate(rotation || 0);
+    if (animated) ctx.rotate(data.rotation || 0);
   }
 
   const time = performance.now() / 1000;
@@ -259,13 +282,13 @@ function drawItem(data, animated = true, sharedRotation = 0, centerX = 0, center
     ? 1 + Math.sin(time * data.scaleSpeed + data.scalePhase) * data.scaleAmplitude
     : 1;
 
+  ctx.translate(0, 0);
   ctx.scale(scale, scale);
   ctx.filter = animated && data.blur ? `blur(${data.blur}px)` : 'none';
   ctx.font = `${data.fontSize}px '${currentFont}', sans-serif`;
   ctx.fillStyle = data.color;
   ctx.globalAlpha = animated && data.flicker ? 0.4 + Math.random() * 0.5 : 1;
   ctx.fillText(data.text, 0, 0);
-
   ctx.restore();
   ctx.filter = 'none';
   ctx.globalAlpha = 1;

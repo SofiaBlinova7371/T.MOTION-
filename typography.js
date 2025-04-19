@@ -57,23 +57,27 @@ fetch(API_URL)
     console.error('Error fetching Google Fonts:', error);
   });
 
-export function updateTypographyStyle() {
-  if (!fontsReady) return;
-
-  const selectedStyle = typographySelector.value;
-  const fontList = fontsByStyle[selectedStyle];
-  if (!fontList || fontList.length === 0) return;
-
-  const randomFont = fontList[Math.floor(Math.random() * fontList.length)];
-  currentFont = randomFont;
-  const fontNameForCSS = randomFont.replace(/ /g, '+');
-
-  const existingLinks = document.querySelectorAll('link[data-dynamic-font]');
-  existingLinks.forEach(link => link.remove());
-
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = `https://fonts.googleapis.com/css2?family=${fontNameForCSS}&display=swap`;
-  link.setAttribute('data-dynamic-font', 'true');
-  document.head.appendChild(link);
-}
+  export function updateTypographyStyle() {
+    if (!fontsReady) return Promise.resolve();
+  
+    const selectedStyle = typographySelector.value;
+    const fontList = fontsByStyle[selectedStyle];
+    if (!fontList || fontList.length === 0) return Promise.resolve();
+  
+    const randomFont = fontList[Math.floor(Math.random() * fontList.length)];
+    currentFont = randomFont;
+    const fontNameForCSS = randomFont.replace(/ /g, '+');
+  
+    // Remove old font links
+    document.querySelectorAll('link[data-dynamic-font]').forEach(link => link.remove());
+  
+    // Add new font link
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = `https://fonts.googleapis.com/css2?family=${fontNameForCSS}&display=swap`;
+    link.setAttribute('data-dynamic-font', 'true');
+    document.head.appendChild(link);
+  
+    // Wait until font is fully loaded before returning
+    return document.fonts.load(`16px '${currentFont}'`);
+  }

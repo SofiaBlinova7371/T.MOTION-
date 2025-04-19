@@ -1,23 +1,48 @@
 import { updateCanvasFormat } from './canvas.js';
 import { updateTypographyStyle } from './typography.js';
 import { generateTextPreview } from './structure.js';
+import { showGeneratingOverlay, hideGeneratingOverlay } from './loading.js';
 
 const generateBtn = document.getElementById('generate-btn');
 const textInput = document.getElementById('text-input');
 const structureSlider = document.getElementById('structure');
 const structureValue = document.getElementById('structure-value');
 
-// --- GENERATE TEXT ---
 function generateArtwork() {
   const text = textInput.value.trim() || "Your text";
   const motionType = document.getElementById('motion').value;
 
-  updateCanvasFormat().then(() => {
-    updateTypographyStyle();
-    generateTextPreview(text, motionType);
-  });
+  showGeneratingOverlay(); // start animation immediately
+
+  const startTime = performance.now();
+
+  updateCanvasFormat()
+    .then(() => updateTypographyStyle())
+    .then(() => {
+      // Wait for next frame to ensure DOM/font updates take effect
+      return new Promise(resolve => requestAnimationFrame(resolve));
+    })
+    .then(() => {
+      const now = performance.now();
+      const timeElapsed = now - startTime;
+      const delay = Math.max(1000, timeElapsed + 3000); // wait at least 1s extra
+      return new Promise(resolve => setTimeout(resolve, delay));
+    })
+    .then(() => {
+      generateTextPreview(text, motionType);
+      hideGeneratingOverlay();
+    });
 }
+
 generateBtn.addEventListener('click', generateArtwork);
+
+
+// Ease in-out cubic for smooth rotation
+function easeInOutCubic(t) {
+  return t < 0.5
+    ? 4 * t * t * t
+    : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
 
 // --- HANDLE FILTER DROPDOWNS ---
 document.querySelectorAll('.filter').forEach(filter => {
