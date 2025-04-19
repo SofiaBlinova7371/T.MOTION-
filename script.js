@@ -6,7 +6,36 @@ import { showGeneratingOverlay, hideGeneratingOverlay } from './loading.js';
 const generateBtn = document.getElementById('generate-btn');
 const textInput = document.getElementById('text-input');
 const structureSlider = document.getElementById('structure');
+const fontSizeSlider = document.getElementById('fontsize');
 const structureValue = document.getElementById('structure-value');
+
+// STRUCTURE SLIDER: smooth drag + snap to [1, 50, 100]
+structureSlider.addEventListener('input', () => {
+  structureValue.textContent = structureSlider.value;
+});
+
+structureSlider.addEventListener('change', () => {
+  const val = parseInt(structureSlider.value);
+  const snapped = [1, 50, 100].reduce((prev, curr) =>
+    Math.abs(curr - val) < Math.abs(prev - val) ? curr : prev
+  );
+  structureSlider.value = snapped;
+  structureValue.textContent = snapped;
+});
+
+// FONT SIZE SLIDER: smooth drag + snap to [1–5]
+fontSizeSlider.addEventListener('input', () => {
+  // Optional live display if needed:
+  // document.getElementById('fontsize-value').textContent = fontSizeSlider.value;
+});
+
+fontSizeSlider.addEventListener('change', () => {
+  const val = parseFloat(fontSizeSlider.value);
+  const snapped = [1, 2, 3, 4].reduce((prev, curr) =>
+    Math.abs(curr - val) < Math.abs(prev - val) ? curr : prev
+  );
+  fontSizeSlider.value = snapped;
+});
 
 function generateArtwork() {
   const text = textInput.value.trim() || "Your text";
@@ -36,13 +65,6 @@ function generateArtwork() {
 
 generateBtn.addEventListener('click', generateArtwork);
 
-
-// Ease in-out cubic for smooth rotation
-function easeInOutCubic(t) {
-  return t < 0.5
-    ? 4 * t * t * t
-    : 1 - Math.pow(-2 * t + 2, 3) / 2;
-}
 
 // --- HANDLE FILTER DROPDOWNS ---
 document.querySelectorAll('.filter').forEach(filter => {
@@ -75,27 +97,18 @@ document.querySelectorAll('.filter').forEach(filter => {
   });
 });
 
-// --- STRUCTURE SLIDER TOGGLE ---
-const structureLabel = document.querySelector('.filter-slider label');
-const sliderWrapper = document.querySelector('.slider-wrapper');
-
-structureLabel.addEventListener('click', () => {
-  sliderWrapper.classList.toggle('open');
+// --- STRUCTURE/FONT SLIDER TOGGLE ---
+document.querySelectorAll('.filter-slider label').forEach(label => {
+  label.addEventListener('click', () => {
+    const wrapper = label.nextElementSibling;
+    if (wrapper && wrapper.classList.contains('slider-wrapper')) {
+      wrapper.classList.toggle('open');
+    }
+  });
 });
 
-structureSlider.addEventListener('input', () => {
-  structureValue.textContent = structureSlider.value;
-});
 
-structureSlider.addEventListener('change', () => {
-  const val = parseInt(structureSlider.value);
-  const snapped = [0, 50, 100].reduce((prev, curr) =>
-    Math.abs(curr - val) < Math.abs(prev - val) ? curr : prev
-  );
-  structureSlider.value = snapped;
-  structureValue.textContent = snapped;
-});
-
+// --- DOWNLOAD BUTTON ---
 const downloadBtn = document.getElementById('download-btn');
 
 downloadBtn.addEventListener('click', () => {
@@ -110,12 +123,11 @@ downloadBtn.addEventListener('click', () => {
       link.click();
     });
   } else {
-
-recordCanvas(8000);
+    recordCanvas(8000);
   }
 });
 
-// Helper function to record canvas as video
+// --- RECORD CANVAS (VIDEO EXPORT) ---
 function recordCanvas(duration = 8000) {
   const fps = 60;
   const chunks = [];

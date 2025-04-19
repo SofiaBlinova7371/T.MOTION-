@@ -3,6 +3,7 @@ import { generateMoodPalette } from './mood.js';
 import { currentFont } from './typography.js';
 
 const structureSlider = document.getElementById('structure');
+const fontSizeSlider = document.getElementById('fontsize');
 const moodSelector = document.getElementById('mood');
 const canvas = document.getElementById('artwork-canvas');
 const ctx = canvas.getContext('2d');
@@ -15,7 +16,16 @@ function remToPx(rem) {
   const baseFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
   return rem * baseFontSize;
 }
-
+  function getFontSizeRange(scale) {
+    switch (scale) {
+      case 1: return [0.5, 2.8];
+      case 2: return [2.8, 4.0];
+      case 3: return [4.0, 5.5];
+      case 4: return [5.5, 8.0];
+      default: return [2.8, 4.0];
+    }
+  }
+  
 function getResponsiveFontSize(minRem, maxRem) {
   const screenFactor = Math.min(window.innerWidth, 900) / 900;
   const clampedFactor = Math.max(0.5, screenFactor);
@@ -62,9 +72,9 @@ export function generateTextPreview(text, motionType) {
     const numGroups = Math.max(1, Math.floor(weightAdjusted + Math.random()));
 
     for (let g = 0; g < numGroups; g++) {
-      let fontSize = layoutType === 'structured' ? getResponsiveFontSize(1.4, 3.2)
-                   : layoutType === 'modular' ? getResponsiveFontSize(1.2, 4)
-                   : getResponsiveFontSize(1, 5);
+      const fontScale = parseInt(fontSizeSlider.value);
+      const [minFont, maxFont] = getFontSizeRange(fontScale);
+      let fontSize = getResponsiveFontSize(minFont, maxFont);
 
       allGroups.push({
         text: paragraph,
@@ -104,7 +114,21 @@ export function generateTextPreview(text, motionType) {
     groupPositions.push({ x: baseX, y: baseY });
 
     const textLength = group.text.length;
-    const duplicates = Math.floor(Math.max(4, Math.min(15, 200 / textLength)) + Math.random() * 3);
+    const baseDuplicates = Math.max(4, Math.min(15, 200 / textLength)) + Math.random() * 3;
+    
+    // Apply scaling factor based on font size scale
+    let fontScale = parseInt(fontSizeSlider.value);
+    let scaleFactor = 1;
+    
+    if (fontScale === 1) scaleFactor = 8;
+    else if (fontScale === 2) scaleFactor = 1.5;
+    else if (fontScale === 3) scaleFactor = 1;
+    else if (fontScale === 4) scaleFactor = 0.6;
+    
+    // Only reduce scale for chaotic layout **and** small fonts
+    if (layoutType === 'chaotic' && fontScale === 1) scaleFactor *= 0.5;
+
+    const duplicates = Math.floor(baseDuplicates * scaleFactor);
 
     const direction =
       layoutType === 'chaotic' ? 'cloud'
@@ -147,9 +171,7 @@ export function generateTextPreview(text, motionType) {
       motion.dy = (Math.random() - 0.5) * 1.5;
     
       // OPTIONAL: add bounce behavior randomly (for modular or chaotic)
-      if (Math.random() > 0.5) {
-        motion.bounce = true;
-      }
+      motion.bounce = true;
     
       return motion;
     }

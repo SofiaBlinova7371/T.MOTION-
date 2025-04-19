@@ -25,27 +25,6 @@
         <input type="hidden" id="canvas-format" value="square">
         </div>
 
-        <!-- MOOD -->
-        <div class="filter" data-type="mood">
-        <label>Mood</label>
-        <ul class="filter-options hidden">
-            <li data-value="monochrome">Monochrome</li>
-            <li data-value="vibrant">Vibrant</li>
-            <li data-value="soft">Soft</li>
-            <li data-value="warm">Warm</li>
-            <li data-value="cold">Cold</li>
-        </ul>
-        <input type="hidden" id="mood" value="monochrome">
-        </div>
-
-        <!-- STRUCTURE (range stays as-is) -->
-        <div class="filter-slider">
-            <label for="structure">Structure</label>
-            <div class="slider-wrapper">
-              <input type="range" id="structure" min="0" max="100" step="1" value="50">
-            </div>
-          </div>
-
         <!-- TYPOGRAPHY STYLE -->
         <div class="filter" data-type="typography">
         <label>Typography Style</label>
@@ -58,6 +37,35 @@
             <li data-value="loose-script">Loose Script</li>
         </ul>
         <input type="hidden" id="typography" value="contemporary">
+        </div>
+
+        <!-- FONT SIZE -->
+        <div class="filter-slider">
+        <label for="fontsize">Font Size</label>
+        <div class="slider-wrapper">
+          <input type="range" id="fontsize" min="1" max="4" step="0.01" value="2">
+        </div>
+        </div>
+
+        <!-- STRUCTURE (range stays as-is) -->
+        <div class="filter-slider">
+          <label for="structure">Structure</label>
+          <div class="slider-wrapper">
+            <input type="range" id="structure" min="1" max="100" step="1" value="50">
+          </div>
+        </div>
+
+        <!-- MOOD -->
+        <div class="filter" data-type="mood">
+        <label>Mood</label>
+        <ul class="filter-options hidden">
+            <li data-value="monochrome">Monochrome</li>
+            <li data-value="vibrant">Vibrant</li>
+            <li data-value="soft">Soft</li>
+            <li data-value="warm">Warm</li>
+            <li data-value="cold">Cold</li>
+        </ul>
+        <input type="hidden" id="mood" value="monochrome">
         </div>
 
         <!-- MOTION TYPE -->
@@ -82,6 +90,10 @@
   </div>
 
   <div class="output-section">
+    <div id="loading-overlay">
+      <div id="loading-text"></div>
+    </div>
+
     <div class="canvas square">
       <canvas id="artwork-canvas"></canvas>
     </div>
