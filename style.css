@@ -8,6 +8,8 @@
 /* HTML ROOT */
 html {
   font-size: 62.5%;
+  background-color: black;
+  color: #EFEFEF;
 }
 
 /* BODY LAYOUT */
@@ -16,7 +18,6 @@ body {
   flex-direction: row;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
 }
 
 /* FONT IMPORT */
@@ -25,154 +26,280 @@ body {
   src: url("PPNeueMontreal-Book.otf");
 }
 
+@font-face {
+  font-family: "subtitle_text";
+  src: url("PPNeueMontreal-Medium.otf");
+}
+
 /* TYPOGRAPHY */
 h1 {
   font-family: body_text;
-  text-transform: uppercase;
   font-size: 3rem;
-  padding-left: 2.5rem;
-  margin-bottom: 4rem;
-}
-
-/* INPUT PANEL */
-.input-section {
-  width: 30%;
-  padding-top: 2.5rem;
-  border-right: 0.15rem solid black;
-  overflow-y: scroll;
-}
-
-#text-input {
-  width: 85%;
-  height: 10rem;
-  margin-left: 2.5rem;
-  padding-left: 1rem;
-  font-family: body_text;
-  font-size: 1.6rem;
-  resize: vertical;
-  color: #ccc;
+  letter-spacing: 0.02em;
+  color: #EFEFEF;
   margin-bottom: 3rem;
-  padding: 1rem;
+  text-transform: uppercase;
+  margin-left: 2rem;
 }
 
-/* FILTER CONTAINERS */
-.filter,
-.filter-slider {
-  width: 100%;
-  border-bottom: 0.15rem solid black;
-  padding: 1.5rem 0 0;
-  margin-bottom: 1.5rem;
-}
-
-/* FILTER LABELS */
 .filter label,
 .filter-slider label {
-  font-family: body_text;
-  font-size: 2rem;
-  padding: 0 2.5rem 2rem;
-  cursor: pointer;
-  display: block;
-  text-transform: uppercase;
-  width: 100%;
-}
-
-/* DROPDOWN OPTIONS */
-.filter-options {
-  list-style: none;
-  width: 100%;
-  margin: 0;
-  max-height: 0;
-  overflow: hidden;
-  transition: 0.4s ease, padding 0.5s ease;
-}
-
-.filter-options.open {
-  max-height: 50rem;
-  padding: 1rem 0 1.5rem 0;
+  font-family: subtitle_text;
+  font-size: 1.6rem;
+  letter-spacing: 0.03em;
+  color: #EFEFEF;
 }
 
 .filter-options li {
   font-family: body_text;
   font-size: 1.6rem;
+  letter-spacing: 0.03em;
+  color: #EFEFEF;
+}
+
+.generate-button {
+  font-family: subtitle_text;
+  font-size: 2rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  background-color: #EFEFEF;
+  color: #1F1F1F;
+  border-radius: 0.5rem;
+}
+
+/* INPUT PANEL */
+.input-section {
+  width: 35rem;
+  background-color: #1F1F1F;
+  border-radius: 1.5rem;
+  padding-top: 2.5rem;
+  margin: 2.5rem;
+  height: fit-content;
+  border: none;
+
+  z-index: 10;
+}
+
+#text-input {
   width: 100%;
-  padding: 1.7rem 2.5rem;
-  border-top: 0.1rem solid #ccc;
-  transition: background 0.2s;
+  min-height: 8rem;
+  resize: vertical;
+  font-family: body_text;
+  font-size: 1.6rem;
+  letter-spacing: 0.03em;
+  color: #EFEFEF;
+  background-color: transparent;
+  border-top: 0.075rem solid #464646;
+  border-bottom: 0.075rem solid #464646;
+  border-left: none;
+  border-right: none;
+  padding: 1.2rem 2rem;
+  margin-bottom: 3rem;
+  overflow: hidden;
+  line-height: 1.6;
+}
+
+#text-input::placeholder {
+  color: #464646;
+}
+
+/* SECTION DIVIDERS */
+.section-divider {
+  height: 0.075rem;
+  background-color: #464646;
+  margin: 3rem 0;
+  width: 100%;
+}
+
+/* FILTER CONTAINER */
+.filter {
+  background-color: #1F1F1F;
+  border: 0.075rem solid #565656;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  overflow: hidden;
+}
+
+/* FILTER LABELS */
+.filter label {
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   cursor: pointer;
 }
 
-.filter-options li:last-child {
-  margin-bottom: 1rem;
+/* ARROW ICON */
+.filter-arrow {
+  width: 1.2rem;
+  height: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.filter-options.open ~ .filter-arrow,
+.filter label.open .filter-arrow {
+  transform: rotate(180deg);
+}
+
+/* DROPDOWN OPTIONS */
+.filter-options {
+  background-color: #1F1F1F;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+
+.filter-options.open {
+  max-height: 50rem;
+}
+
+/* OPTION ITEM */
+.filter-options li {
+  font-family: body_text;
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: #EFEFEF;
+  letter-spacing: 0.02em;
+  padding: 1.3rem 2rem;
+  border-top: 0.075rem solid #565656;
+  cursor: pointer;
+  transition: background 0.2s;
+  background-color: #1F1F1F;
 }
 
 .filter-options li:hover,
 .filter-options li.selected {
-  background: #e0e0e0;
+  background-color: #464646;
 }
 
-/* SLIDER DROPDOWN */
-.slider-wrapper {
-  max-height: 0;
-  overflow: hidden;
-  transition: 0.4s ease, padding 0.5s ease;
-  padding: 0 3rem;
+.filter-options li:first-child {
+  border-top: 0.075rem solid #565656;
 }
 
-.slider-wrapper.open {
-  max-height: 8rem;
-  padding-bottom: 1.5rem;
-}
-
-#structure, #fontsize {
-  -webkit-appearance: none;
-  width: 95%;
-  margin: 1.5rem 0;
-  height: 0.3rem;
-  background: black;
-  border-radius: 0.2rem;
-  outline: none;
-  cursor: pointer;
-}
-
-/* Thumb styling */
-#structure::-webkit-slider-thumb, #fontsize::-webkit-slider-thumb {
+/* SLIDERS */
+#structure,
+#fontsize {
   -webkit-appearance: none;
   appearance: none;
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 50%;
-  background: black;
+  width: 100%;
+  height: 0.1rem; /* 1px in rem = 0.1rem */
+  background: #EFEFEF;
+  border-radius: 0;
+  outline: none;
   cursor: pointer;
-  border: none;
+  margin: 2rem 0;
 }
 
-#structure::-moz-range-thumb, #fontsize::-moz-range-thumb {
-  height: 1.5rem;
-  height: 1.5rem;
+/* THUMB STYLE */
+.filter-slider {
+  margin-bottom: 1.5rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
+#structure::-webkit-slider-thumb,
+#fontsize::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1.8rem;
+  height: 1.8rem;
+  background: #1F1F1F;
+  border: 0.1rem solid #EFEFEF;
   border-radius: 50%;
-  background: black;
   cursor: pointer;
-  border: none;
+  transition: background 0.3s ease;
+}
+
+#structure::-moz-range-thumb,
+#fontsize::-moz-range-thumb {
+  width: 1.2rem;
+  height: 1.2rem;
+  background: #1F1F1F;
+  border: 0.075rem solid #EFEFEF;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* MOTION FILTER */
+
+.motion-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  margin-bottom: 2rem;
+  border-radius: 0.5rem;
+  background-color: #1F1F1F;
+  margin-bottom: 3rem;
+  font-family: subtitle_text;
+  font-size: 1.6rem;
+  letter-spacing: 0.03em;
+  color: #EFEFEF;
+}
+
+.toggle-switch {
+  width: 4rem;
+  height: 2rem;
+  border-radius: 1rem;
+  background-color: #EFEFEF;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-circle {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background-color: #1F1F1F;
+  border: 0.075rem solid #EFEFEF;
+  position: absolute;
+  top: 0.2rem;
+  left: 0.2rem;
+  transition: transform 0.3s ease;
+}
+
+.toggle-switch[data-state="on"] {
+  background-color: #EFEFEF;
+}
+
+.toggle-switch[data-state="on"] .toggle-circle {
+  transform: translateX(2rem);
+}
+
+.toggle-switch[data-state="off"] {
+  background-color: #464646;
+}
+
+.toggle-switch[data-state="off"] .toggle-circle {
+  transform: translateX(0);
 }
 
 /* BUTTON */
 .generate-button {
   width: 100%;
-  /* margin-left: 2.5rem; */
-  margin-top: -1.5rem;
-  padding: 2.5rem 2.5rem; /* vertical padding + space for arrow on right */
-  background: black;
-  color: white;
-  font-family: body_text;
+  margin-top: 3rem;
+  padding: 2rem 2rem;
+  background-color: #EFEFEF;
+  color: #1F1F1F;
+  font-family: subtitle_text;
   font-size: 2rem;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  cursor: pointer;
   border: none;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
   position: relative;
-  overflow: hidden;
 }
 
 .generate-button .arrow {
@@ -186,9 +313,32 @@ h1 {
   opacity: 1;
 }
 
+/* DOWNLOAD BUTTON */
+
+.download-icon-btn {
+  position: fixed;
+  bottom: 2.5rem;
+  right: 2.5rem;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.download-icon-btn img {
+  width: 3.6rem;
+  height: 3.6rem;
+  transition: transform 0.2s ease;
+}
+
 /* OUTPUT PANEL */
 .output-section {
+  position: fixed;
+  right: 0;
+  top: 0;
   width: 70%;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -197,7 +347,7 @@ h1 {
 .canvas {
   position: relative;
   overflow: hidden;
-  border: 0.1rem solid black;
+  border: 0.075rem solid #EFEFEF;
   will-change: transform;
 }
 
@@ -217,32 +367,61 @@ h1 {
   aspect-ratio: 2 / 3;
 }
 
-#loading-overlay {
+.loading-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(255, 255, 255, 0.8);
+  background: black;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.6s ease; /* Add this for smooth fade */
   z-index: 10;
 }
 
-#loading-overlay.visible {
+.loading-overlay.visible {
   opacity: 1;
 }
 
+.loading-canvas {
+  background-color: black;
+  border: 0.1rem solid #EFEFEF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #EFEFEF;
+  font-family: subtitle_text;
+}
+
+.loading-canvas.square {
+  width: 60%;
+  aspect-ratio: 1 / 1;
+}
+
+.loading-canvas.landscape {
+  width: 90%;
+  aspect-ratio: 3 / 2;
+}
+
+.loading-canvas.portrait {
+  height: 90%;
+  aspect-ratio: 2 / 3;
+}
+
 #loading-text {
+  font-family: subtitle_text;
+  font-size: 1.6rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #EFEFEF;
   display: flex;
   gap: 0.5rem;
-  font-family: 'PPNeueMontreal-Book', sans-serif;
   font-size: 2rem;
-  color: black;
+  color: #EFEFEF;
 }
 
 .loading-letter {
@@ -262,81 +441,75 @@ h1 {
   display: inline-block;
 }
 
-/* UTILITY */
-.hidden {
-  opacity: 0;
+/* BURGER ICON */
+#burger-menu {
+  display: none;
 }
 
-.open {
-  opacity: 1;
+.burger-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  z-index: 1000;
 }
 
+.burger-icon .bar {
+  width: 2.5rem;
+  height: 0.3rem;
+  background-color: #EFEFEF;
+  border-radius: 0.2rem;
+}
 
-
-/* MOBILE ADAPTATION */
-@media screen and (max-width: 800px) {
-  body {
-    flex-direction: column;
-    overflow: scroll;
-  }
-
-  .input-section {
-    width: 100%;
-    height: auto;
-    border-right: none;
-    border-bottom: 0.15rem solid black;
-    padding-bottom: 0;
-    overflow-y: visible;
-  }
-
+@media only screen and (max-width: 900px) {
   .output-section {
-    width: 100%;
-    height: auto;
-    padding: 5rem 0;
-    border-top: none;
+    width: 100vw;
   }
 
-  .canvas.square,
-  .canvas.landscape,
-  .canvas.portrait {
-    width: 90%;
-    max-width: 90%;
+  .input-section.mobile-slide {
+    width: 35rem;
+    margin: 0;
+    padding-top: 6rem;
+    border-radius: 0;
+    transform: translateX(-110%);
+    transition: transform 0.3s ease;
+    height: 100vh;
+    overflow-y: scroll;
   }
 
-  h1,
-  .filter label,
-  .filter-options li,
-  .slider-wrapper {
-    padding-left: 3rem !important;
-    padding-right: 3rem;
-  }
-
-  #text-input {
-    width: calc(100% - 6rem);
-    margin-left: 3rem;
-    padding-left: 1rem;
+  .input-section.mobile-slide.open {
+    transform: translateX(0);
   }
 
   .generate-button {
     width: 100%;
-    margin: 0;
-    margin-top: -2rem;
-    padding: 2.5rem 3rem;
+    margin-top: 3rem;
+    padding: 2rem 2rem;
+ 
     border-radius: 0;
+    position: relative;
   }
 
-  .generate-button span {
-    padding-left: 0;
+  body.menu-open {
+    overflow: hidden;
   }
 
-  .generate-button .arrow {
-    margin-right: 0;
+  #burger-menu {
+    display: block;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .input-section.mobile-slide {
+    width: 100vw;
   }
 
-  #download-btn {
-    width: 100%;
-    margin: 0;
-    padding-left: 3rem;
-    padding-right: 3rem;
+  .input-section.mobile-slide.open {
+    transform: translateX(0);
   }
 }

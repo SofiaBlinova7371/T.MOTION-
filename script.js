@@ -8,6 +8,14 @@ const textInput = document.getElementById('text-input');
 const structureSlider = document.getElementById('structure');
 const fontSizeSlider = document.getElementById('fontsize');
 const structureValue = document.getElementById('structure-value');
+const motionToggle = document.getElementById('motion-toggle');
+const motionInput = document.getElementById('motion');
+
+// Auto-expand text input as user types
+textInput.addEventListener('input', () => {
+  textInput.style.height = 'auto';
+  textInput.style.height = textInput.scrollHeight + 'px';
+});
 
 // STRUCTURE SLIDER: smooth drag + snap to [1, 50, 100]
 structureSlider.addEventListener('input', () => {
@@ -24,11 +32,6 @@ structureSlider.addEventListener('change', () => {
 });
 
 // FONT SIZE SLIDER: smooth drag + snap to [1–5]
-fontSizeSlider.addEventListener('input', () => {
-  // Optional live display if needed:
-  // document.getElementById('fontsize-value').textContent = fontSizeSlider.value;
-});
-
 fontSizeSlider.addEventListener('change', () => {
   const val = parseFloat(fontSizeSlider.value);
   const snapped = [1, 2, 3, 4].reduce((prev, curr) =>
@@ -39,32 +42,33 @@ fontSizeSlider.addEventListener('change', () => {
 
 function generateArtwork() {
   const text = textInput.value.trim() || "Your text";
-  const motionType = document.getElementById('motion').value;
+  const motionType = motionInput.value;
 
-  showGeneratingOverlay(); // start animation immediately
+  const canvas = document.querySelector('#artwork-canvas');
+  const format = canvas.classList.contains('portrait') ? 'portrait'
+                : canvas.classList.contains('landscape') ? 'landscape'
+                : 'square';
+
+  showGeneratingOverlay(format);
 
   const startTime = performance.now();
 
   updateCanvasFormat()
     .then(() => updateTypographyStyle())
-    .then(() => {
-      // Wait for next frame to ensure DOM/font updates take effect
-      return new Promise(resolve => requestAnimationFrame(resolve));
-    })
+    .then(() => new Promise(resolve => requestAnimationFrame(resolve)))
     .then(() => {
       const now = performance.now();
       const timeElapsed = now - startTime;
-      const delay = Math.max(1000, timeElapsed + 3000); // wait at least 1s extra
+      const delay = Math.max(1000, timeElapsed + 3000);
       return new Promise(resolve => setTimeout(resolve, delay));
     })
     .then(() => {
       generateTextPreview(text, motionType);
-      hideGeneratingOverlay();
+      hideGeneratingOverlay(); // <— This now fades out
     });
 }
 
 generateBtn.addEventListener('click', generateArtwork);
-
 
 // --- HANDLE FILTER DROPDOWNS ---
 document.querySelectorAll('.filter').forEach(filter => {
@@ -75,12 +79,12 @@ document.querySelectorAll('.filter').forEach(filter => {
   label.addEventListener('click', () => {
     const isOpen = options.classList.contains('open');
     options.classList.toggle('open');
-
-    if (isOpen) {
-      options.style.maxHeight = '0';
-    } else {
-      options.style.maxHeight = options.scrollHeight + 'px';
-    }
+    label.classList.toggle('open');
+  
+    const arrow = label.querySelector('.filter-arrow');
+    arrow?.classList.toggle('rotated');
+  
+    options.style.maxHeight = isOpen ? '0' : options.scrollHeight + 'px';
   });
 
   options.querySelectorAll('li').forEach(option => {
@@ -89,10 +93,18 @@ document.querySelectorAll('.filter').forEach(filter => {
       option.classList.add('selected');
 
       const hiddenInput = document.getElementById(type);
-      if (hiddenInput) hiddenInput.value = option.dataset.value;
+      if (hiddenInput) hiddenInput.value = option.dataset.value;    
 
       options.classList.remove('open');
       options.style.maxHeight = '0';
+      label.classList.remove('open'); // remove label highlight
+      const arrow = label.querySelector('.filter-arrow');
+      arrow?.classList.remove('rotated');
+
+      // ➤ Update canvas format instantly on selection
+      if (type === 'canvas-format') {
+        updateCanvasFormat();
+      }
     });
   });
 });
@@ -107,12 +119,20 @@ document.querySelectorAll('.filter-slider label').forEach(label => {
   });
 });
 
+// --- MOTION FILTER TOGGLE ---
+motionToggle.addEventListener('click', () => {
+  const current = motionToggle.dataset.state;
+  const next = current === 'on' ? 'off' : 'on';
+
+  motionToggle.dataset.state = next;
+  motionInput.value = next === 'on' ? 'dynamic' : 'static';
+});
 
 // --- DOWNLOAD BUTTON ---
 const downloadBtn = document.getElementById('download-btn');
 
 downloadBtn.addEventListener('click', () => {
-  const motionType = document.getElementById('motion').value;
+  const motionType = motionInput.value;
   const canvas = document.querySelector('.canvas');
 
   if (motionType === 'static') {
@@ -152,9 +172,22 @@ function recordCanvas(duration = 8000) {
   };
 
   recorder.start();
-
-  // Stop after given duration
-  setTimeout(() => {
-    recorder.stop();
-  }, duration);
+  setTimeout(() => recorder.stop(), duration);
 }
+
+// --- MOBILE MENU TOGGLE ---
+const burgerIcon = document.querySelector('#burger-menu .burger-icon');
+const mobileInputPanel = document.querySelector('.input-section.mobile-slide');
+
+// Toggle panel on burger click
+burgerIcon?.addEventListener('click', () => {
+  const isOpen = mobileInputPanel?.classList.contains('open');
+  mobileInputPanel?.classList.toggle('open');
+  document.body.classList.toggle('menu-open', !isOpen);
+});
+
+// Close panel on generate
+generateBtn?.addEventListener('click', () => {
+  mobileInputPanel?.classList.remove('open');
+  document.body.classList.remove('menu-open');
+});

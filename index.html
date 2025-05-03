@@ -9,14 +9,26 @@
   <title>T.MOTION()</title>
 </head>
 <body>
-  <div class="input-section">
+  <!-- MOBILE BURGER MENU -->
+<div id="burger-menu">
+  <button class="burger-icon" aria-label="Toggle Menu">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+  </button>
+</div>
+
+  <div class="input-section mobile-slide">
             <!-- TEXT AREA -->
         <h1>T.MOTION()</h1>
-        <textarea id="text-input" placeholder="Text input..." rows="3"></textarea>
+        <textarea id="text-input" placeholder="Type your text here..."></textarea>
 
         <!-- CANVAS FORMAT -->
         <div class="filter" data-type="canvas-format">
-        <label>Canvas Format</label>
+        <label>
+          Canvas Format
+          <img src="filter_arrow.svg" class="filter-arrow" alt="arrow" />
+        </label>
         <ul class="filter-options hidden">
             <li data-value="portrait">Portrait</li>
             <li data-value="square">Square</li>
@@ -27,7 +39,10 @@
 
         <!-- TYPOGRAPHY STYLE -->
         <div class="filter" data-type="typography">
-        <label>Typography Style</label>
+        <label>
+          Typographic Style
+          <img src="filter_arrow.svg" class="filter-arrow" alt="arrow" />
+        </label>
         <ul class="filter-options hidden">
             <li data-value="contemporary">Contemporary</li>
             <li data-value="brutalist">Brutalist</li>
@@ -39,6 +54,24 @@
         <input type="hidden" id="typography" value="contemporary">
         </div>
 
+        <!-- COLOR MOOD -->
+        <div class="filter" data-type="mood">
+          <label>
+            Color Mood
+            <img src="filter_arrow.svg" class="filter-arrow" alt="arrow" />
+          </label>
+          <ul class="filter-options hidden">
+              <li data-value="monochrome">Monochrome</li>
+              <li data-value="vibrant">Vibrant</li>
+              <li data-value="soft">Soft</li>
+              <li data-value="warm">Warm</li>
+              <li data-value="cold">Cold</li>
+          </ul>
+          <input type="hidden" id="mood" value="monochrome">
+          </div>
+
+        <div class="section-divider"></div>
+
         <!-- FONT SIZE -->
         <div class="filter-slider">
         <label for="fontsize">Font Size</label>
@@ -49,55 +82,44 @@
 
         <!-- STRUCTURE (range stays as-is) -->
         <div class="filter-slider">
-          <label for="structure">Structure</label>
+          <label for="structure">Structure Level</label>
           <div class="slider-wrapper">
             <input type="range" id="structure" min="1" max="100" step="1" value="50">
           </div>
         </div>
 
-        <!-- MOOD -->
-        <div class="filter" data-type="mood">
-        <label>Mood</label>
-        <ul class="filter-options hidden">
-            <li data-value="monochrome">Monochrome</li>
-            <li data-value="vibrant">Vibrant</li>
-            <li data-value="soft">Soft</li>
-            <li data-value="warm">Warm</li>
-            <li data-value="cold">Cold</li>
-        </ul>
-        <input type="hidden" id="mood" value="monochrome">
-        </div>
+        <div class="section-divider"></div>
 
         <!-- MOTION TYPE -->
-        <div class="filter" data-type="motion">
-        <label>Motion Type</label>
-        <ul class="filter-options hidden">
-            <li data-value="static">Static</li>
-            <li data-value="dynamic">Dynamic</li>
-        </ul>
-        <input type="hidden" id="motion" value="static">
+        <div class="motion-toggle">
+          <span>Motion</span>
+          <div class="toggle-switch" id="motion-toggle" data-state="on">
+            <div class="toggle-circle"></div>
+          </div>
         </div>
+        <input type="hidden" id="motion" value="dynamic">
 
         <!-- GENERATE BUTTON -->
-        <div class="generate-button" id="generate-btn">
-            <span>Generate</span>
-            <img class="arrow" src="Symbols/Arrow.svg" alt="Arrow">
-        </div>
-
-        <div class="generate-button" id="download-btn">
-          <span>Download the Artwork</span>
-        </div>
+        <button id="generate-btn" class="generate-button">
+          GENERATE
+          <img src="arrow.svg" alt="arrow" class="arrow" />
+        </button>
   </div>
 
   <div class="output-section">
-    <div id="loading-overlay">
-      <div id="loading-text"></div>
-    </div>
-
-    <div class="canvas square">
-      <canvas id="artwork-canvas"></canvas>
+    <canvas id="artwork-canvas" class="canvas square"></canvas>
+  
+    <div id="loading-overlay" class="loading-overlay">
+      <div id="loading-canvas" class="loading-canvas square">
+        <div id="loading-text"></div>
+      </div>
     </div>
   </div>
+
+  <!-- DOWNLOAD BUTTON -->
+<button id="download-btn" class="download-icon-btn">
+  <img src="download.svg" alt="Download" />
+</button>
 
   <script type="module" src="script.js"></script>
 </body>
